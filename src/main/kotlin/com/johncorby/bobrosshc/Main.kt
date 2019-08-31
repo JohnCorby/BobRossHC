@@ -13,15 +13,24 @@ const val WORLD_PREFIX = "HardCore_Season_"
 
 class Main : JavaPlugin(), Listener {
     override fun onEnable() {
-        server.pluginManager.registerEvents(this, this)
-        logger.info("$name enabled")
+        saveDefaultConfig()
+
+        server.pluginManager.registerEvents(Listener, this)
     }
 
-    override fun onDisable() = logger.info("$name disabled")
-
+    /**
+     * put player on spectator when they die in hardcore world
+     */
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
         if (event.entity.world.name.startsWith(WORLD_PREFIX))
             event.entity.gameMode = GameMode.SPECTATOR
+    }
+
+    /**
+     * reset hc to new season (by creating a new world)
+     */
+    fun reset() {
+
     }
 }

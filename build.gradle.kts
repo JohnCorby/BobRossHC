@@ -1,9 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
-val jarName = "${project.name}.jar"
-val jarDir = "/home/johncorby/Desktop/Test Server/plugins"
 
 group = "com.johncorby.bobrosshc"
 
@@ -28,17 +24,17 @@ tasks {
         kotlinOptions.jvmTarget = "1.8"
     }
 
-    shadowJar {
-        minimize()
-
-        archiveFileName.set(jarName)
-        destinationDirectory.set(File(jarDir))
-
-        dependsOn("relocateShadowJar")
-    }
-
     task<ConfigureShadowRelocation>("relocateShadowJar") {
         target = shadowJar.get()
-        prefix = project.group as String
+        prefix = project.group.toString()
+    }
+
+    shadowJar {
+        dependsOn("relocateShadowJar")
+
+        minimize()
+
+        archiveFileName.set("${project.name}.jar")
+        destinationDirectory.set(File("/home/johncorby/Desktop/Test Server/plugins"))
     }
 }
