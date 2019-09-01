@@ -1,11 +1,12 @@
 package com.johncorby.bobrosshc
 
+import com.johncorby.bobrosshc.Main.Companion.LUCK_PERMS_API
 import org.bukkit.GameMode
 import org.bukkit.World
 import org.bukkit.entity.Player
 
 const val WORLD_PREFIX = "HardCore_Season_"
-fun valid(player: Player) = player.world.name.startsWith(WORLD_PREFIX)
+fun valid(world: World) = world.name.startsWith(WORLD_PREFIX)
 
 //const val PERM_PREFIX =
 /**
@@ -15,6 +16,7 @@ fun valid(player: Player) = player.world.name.startsWith(WORLD_PREFIX)
  * permission: mv.bypass.gamemode.[*|WORLDNAME]
  */
 fun bypassGamemode(world: World) {
+    LUCK_PERMS_API.
 }
 
 fun markDead(player: Player) {
@@ -23,6 +25,10 @@ fun markDead(player: Player) {
     Data.deadPlayers.add(player.name)
 }
 
-fun reset() {
+fun setGamemode(event
 
+fun reset() {
+    // make new world
+
+    // reset dead players
 }
