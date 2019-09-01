@@ -1,6 +1,5 @@
 package com.johncorby.bobrosshc
 
-import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
@@ -11,6 +10,6 @@ object Listener : Listener {
      */
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
-        if (valid(event.entity)) event.entity.gameMode = GameMode.SPECTATOR
+        if (valid(event.entity)) markDead(event.entity)
     }
 }

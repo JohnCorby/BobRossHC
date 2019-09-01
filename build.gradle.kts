@@ -5,18 +5,18 @@ group = "com.johncorby.bobrosshc"
 
 plugins {
     kotlin("jvm") version "1.3.50"
-
     id("com.github.johnrengelman.shadow") version "5.1.0"
 }
 
 repositories {
+    mavenCentral()
     maven("https://papermc.io/repo/repository/maven-public")
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-
     compileOnly("com.destroystokyo.paper:paper-api:+")
+    compileOnly("me.lucko.luckperms:luckperms-api:+")
 }
 
 tasks {

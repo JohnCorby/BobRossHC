@@ -5,24 +5,24 @@ import java.io.File
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 
-object Config {
-    private const val NAME = "playerData.dat"
+object Data {
+    private const val NAME = "deadPlayers.dat"
     private lateinit var file: File
 
-    private var data = mutableMapOf<String, Boolean>()
+    var deadPlayers = mutableListOf<String>()
 
     fun load() {
 //        PLUGIN.dataFolder.mkdir()
         file = File(PLUGIN.dataFolder, NAME)
 
         ObjectInputStream(file.inputStream()).use {
-            data = it.readObject() as MutableMap<String, Boolean>
+            deadPlayers = it.readObject() as MutableList<String>
         }
     }
 
     fun save() {
         ObjectOutputStream(file.outputStream()).use {
-            it.writeObject(data)
+            it.writeObject(deadPlayers)
         }
     }
 }

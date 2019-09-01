@@ -13,9 +13,9 @@ class Main : JavaPlugin(), Listener {
 
     override fun onEnable() {
         PLUGIN = this
-        Config.load()
+        Data.load()
         server.pluginManager.registerEvents(Listener, this)
     }
 
-    override fun onDisable() = Config.save()
+    override fun onDisable() = Data.save()
 }
