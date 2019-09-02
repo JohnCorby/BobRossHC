@@ -20,6 +20,8 @@ dependencies {
 }
 
 tasks {
+    defaultTasks("clean", "shadowJar")
+
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
     }
