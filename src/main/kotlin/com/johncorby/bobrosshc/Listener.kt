@@ -1,10 +1,18 @@
 package com.johncorby.bobrosshc
 
 import org.bukkit.GameMode
+import org.bukkit.World
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerTeleportEvent
+
+const val WORLD_PREFIX = "HardCore_Season_"
+
+private fun World.valid() = name.startsWith(WORLD_PREFIX)
+private fun Player.valid() = world.valid()
+
 
 object Listener : Listener {
     @EventHandler
@@ -12,7 +20,7 @@ object Listener : Listener {
         with(event.entity) {
             if (!valid()) return
 
-            Data.deadPlayers.add(name)
+            deadPlayers.add(name)
             gameMode = GameMode.SPECTATOR
         }
     }
@@ -23,7 +31,7 @@ object Listener : Listener {
         if (!event.to.world.valid()) return
 
         with(event.player) {
-            gameMode = if (name in Data.deadPlayers) GameMode.SPECTATOR else GameMode.SURVIVAL
+            gameMode = if (name in deadPlayers) GameMode.SPECTATOR else GameMode.SURVIVAL
         }
     }
 }
