@@ -22,7 +22,7 @@ fun loadData() {
 fun saveData() {
     PLUGIN.config.set("current-season", currentSeason)
     PLUGIN.config.set("dead-players", deadPlayers)
-    PLUGIN.config.set("last-reset", currentSeason)
+    PLUGIN.config.set("last-reset", lastReset.toString())
 
     PLUGIN.saveConfig()
 }

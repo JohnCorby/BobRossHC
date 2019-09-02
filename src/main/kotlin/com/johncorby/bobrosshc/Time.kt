@@ -2,11 +2,17 @@ package com.johncorby.bobrosshc
 
 import org.bukkit.WorldCreator
 import org.bukkit.scheduler.BukkitRunnable
+import java.time.Duration
 import java.time.LocalDateTime
 
+/**
+ * start time checker
+ * every minute, we check if the time since last reset is longer than [14] days
+ */
 fun startTimeChecker() = object : BukkitRunnable() {
     override fun run() {
-
+        if (Duration.between(lastReset, LocalDateTime.now()).toDays() >= 14)
+            newSeason()
     }
 }.runTaskTimer(PLUGIN, 0, 60 * 20)
 
