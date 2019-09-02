@@ -1,6 +1,3 @@
-/**
- * todo last-fired events instead of bypass permissions
- */
 package com.johncorby.bobrosshc
 
 import me.lucko.luckperms.LuckPerms
