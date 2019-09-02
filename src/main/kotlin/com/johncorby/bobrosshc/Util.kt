@@ -1,14 +1,20 @@
 package com.johncorby.bobrosshc
 
-import com.johncorby.bobrosshc.Main.Companion.LUCK_PERMS_API
-import org.bukkit.GameMode
+import com.johncorby.bobrosshc.Main.Companion.PERM_API
+import com.johncorby.bobrosshc.Main.Companion.PERM_GROUP
+import me.lucko.luckperms.api.Node
 import org.bukkit.World
+import org.bukkit.WorldCreator
 import org.bukkit.entity.Player
 
+const val DATA_FILE_NAME = "deadPlayers.dat"
 const val WORLD_PREFIX = "HardCore_Season_"
-fun valid(world: World) = world.name.startsWith(WORLD_PREFIX)
+const val PERM_GROUP_NAME = "Trusted"
+const val PERM_PREFIX = "mv.bypass.gamemode."
 
-//const val PERM_PREFIX =
+fun World.valid() = name.startsWith(WORLD_PREFIX)
+fun Player.valid() = world.valid()
+
 /**
  * workaround for multiverse
  * bypass forced gamemode so we can manage it ourselves
@@ -16,19 +22,20 @@ fun valid(world: World) = world.name.startsWith(WORLD_PREFIX)
  * permission: mv.bypass.gamemode.[*|WORLDNAME]
  */
 fun bypassGamemode(world: World) {
-    LUCK_PERMS_API.
+    // turn
+    PERM_API.knownPermissions
 }
 
-fun markDead(player: Player) {
-    player.gameMode = GameMode.SPECTATOR
+fun newSeason() {
+    val group = PERM_API.getGroup(PERM_GROUP_NAME)!!
+    group.unsetPermission(PERM_API.buildNode(PERM_PREFIX + Data.currentSeason).build())
 
-    Data.deadPlayers.add(player.name)
-}
+    Data.currentSeason++
+    Data.deadPlayers.clear()
 
-fun setGamemode(event
+    PERM_API.groupManager.saveGroup(group)
 
-fun reset() {
-    // make new world
+    WorldCreator()
 
-    // reset dead players
+
 }
