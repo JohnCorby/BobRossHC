@@ -1,17 +1,23 @@
 package com.johncorby.bobrosshc
 
 import org.bukkit.WorldCreator
+import org.bukkit.scheduler.BukkitRunnable
+import java.time.LocalDateTime
 
-//private val TIME = kotlin.time.Clock
+fun startTimeChecker() = object : BukkitRunnable() {
+    override fun run() {
 
+    }
+}.runTaskTimer(PLUGIN, 0, 60 * 20)
 
-private fun newSeason() {
-    GROUP.unsetPermission(worldBypassPerm)
-    currentSeason++
-    GROUP.setPermission(worldBypassPerm)
-    PERM_API.groupManager.saveGroup(GROUP)
-
+fun newSeason() {
+    WorldCreator(worldName).createWorld()
     deadPlayers.clear()
 
-    WorldCreator(worldName).createWorld()
+    PERM_GROUP.unsetPermission(worldBypassPerm)
+    currentSeason++
+    PERM_GROUP.setPermission(worldBypassPerm)
+    PERM_API.groupManager.saveGroup(PERM_GROUP)
+
+    lastReset = LocalDateTime.now()
 }

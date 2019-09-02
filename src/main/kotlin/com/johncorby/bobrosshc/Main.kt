@@ -14,6 +14,7 @@ class Main : JavaPlugin(), Listener {
         PLUGIN = this
         PERM_API = LuckPerms.getApi()
         loadData()
+        startTimeChecker()
         server.pluginManager.registerEvents(Listener, this)
     }
 
