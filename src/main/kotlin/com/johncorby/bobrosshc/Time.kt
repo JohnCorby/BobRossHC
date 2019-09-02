@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 /**
  * start time checker
- * every minute, we check if the time since last reset is longer than [14] days
+ * every minute, we check if the time since last reset is longer than 14 days
  */
 fun startTimeChecker() = object : BukkitRunnable() {
     override fun run() {
