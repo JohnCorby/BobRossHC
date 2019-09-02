@@ -26,13 +26,13 @@ tasks {
         kotlinOptions.jvmTarget = "1.8"
     }
 
-    task<ConfigureShadowRelocation>("relocateShadowJar") {
+    task<ConfigureShadowRelocation>("relocate") {
         target = shadowJar.get()
         prefix = project.group.toString()
     }
 
     shadowJar {
-        dependsOn("relocateShadowJar")
+        dependsOn("relocate")
 
         minimize()
 
