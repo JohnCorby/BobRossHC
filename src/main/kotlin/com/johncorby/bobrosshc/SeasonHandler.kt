@@ -10,7 +10,7 @@ import java.time.temporal.ChronoUnit
 
 /**
  * start time checker
- * every minute, we check if the time since last reset is longer than 14 days
+ * every minute, we check if it's been 14 days since last reset and create a new season if so
  */
 fun startTimeChecker() = object : BukkitRunnable() {
     override fun run() {
@@ -24,7 +24,7 @@ fun newSeason() {
     WorldCreator(worldName).createWorld()
     deadPlayers.clear()
 
-    // update permissions
+    // update bypass permissions
     PERM_GROUP.unsetPermission(worldBypassPerm)
     currentSeason++
     PERM_GROUP.setPermission(worldBypassPerm)

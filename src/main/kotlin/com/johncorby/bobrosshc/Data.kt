@@ -16,6 +16,7 @@ fun loadData() {
     currentSeason = PLUGIN.config.getInt("current-season")
     deadPlayers = PLUGIN.config.getStringList("dead-players")
 
+    // if last-reset isn't set, then we haven't had any seasons and should make a new one
     if (PLUGIN.config.isSet("last-reset"))
         lastReset = LocalDateTime.parse(PLUGIN.config.getString("last-reset"))
     else
