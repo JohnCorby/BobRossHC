@@ -1,3 +1,6 @@
+/**
+ * handles loading/saving of storage
+ */
 package com.johncorby.bobrosshc
 
 import java.time.LocalDateTime

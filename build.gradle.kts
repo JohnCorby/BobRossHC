@@ -35,6 +35,6 @@ tasks {
         minimize()
 
         archiveFileName.set("${project.name}.jar")
-        destinationDirectory.set(File("/home/johncorby/Desktop/Test Server/plugins"))
+//        destinationDirectory.set(File("/home/johncorby/Desktop/Test Server/plugins"))
     }
 }

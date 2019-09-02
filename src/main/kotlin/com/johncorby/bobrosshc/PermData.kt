@@ -1,3 +1,6 @@
+/**
+ * stores proper bypass permissions
+ */
 package com.johncorby.bobrosshc
 
 import me.lucko.luckperms.api.LuckPermsApi

@@ -1,5 +1,5 @@
 /**
- * todo season tracking
+ * todo last-fired events instead of bypass permissions
  */
 package com.johncorby.bobrosshc
 
