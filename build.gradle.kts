@@ -1,28 +1,24 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-group = "com.johncorby.bobrosshc"
-
 plugins {
-    kotlin("jvm") version "1.3.50"
-    id("com.github.johnrengelman.shadow") version "5.1.0"
-}
+    kotlin("jvm") version "1.3.70"
 
-repositories {
-    mavenCentral()
-    maven("https://papermc.io/repo/repository/maven-public")
+    id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+
     compileOnly("com.destroystokyo.paper:paper-api:+")
+
     compileOnly("me.lucko.luckperms:luckperms-api:+")
 }
 
 tasks {
-    defaultTasks("clean", "shadowJar")
+    defaultTasks("shadowJar")
 
-    withType<KotlinCompile> {
+    compileKotlin {
         kotlinOptions.jvmTarget = "1.8"
     }
 
@@ -30,13 +26,9 @@ tasks {
         target = shadowJar.get()
         prefix = project.group.toString()
     }
-
     shadowJar {
         dependsOn("relocate")
-
         minimize()
-
         archiveFileName.set("${project.name}.jar")
-//        destinationDirectory.set(File("/home/johncorby/Desktop/Test Server/plugins"))
     }
 }
