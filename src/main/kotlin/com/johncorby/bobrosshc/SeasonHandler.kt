@@ -25,9 +25,9 @@ fun newSeason() {
     deadPlayers.clear()
 
     // update bypass permissions
-    PERM_GROUP.unsetPermission(worldBypassPerm)
+    PERM_GROUP.data().remove(worldBypassPerm)
     currentSeason++
-    PERM_GROUP.setPermission(worldBypassPerm)
+    PERM_GROUP.data().add(worldBypassPerm)
     PERM_API.groupManager.saveGroup(PERM_GROUP)
 
     // the last reset was right now

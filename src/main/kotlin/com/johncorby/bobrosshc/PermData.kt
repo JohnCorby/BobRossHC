@@ -3,10 +3,12 @@
  */
 package com.johncorby.bobrosshc
 
-import me.lucko.luckperms.api.LuckPermsApi
+import net.luckperms.api.LuckPerms
+import net.luckperms.api.model.group.Group
+import net.luckperms.api.node.Node
 
-lateinit var PERM_API: LuckPermsApi
-val PERM_GROUP = PERM_API.getGroup("Trusted")!!
+lateinit var PERM_API: LuckPerms
+lateinit var PERM_GROUP: Group
 
-val worldName get() = "$WORLD_PREFIX$currentSeason"
-val worldBypassPerm get() = PERM_API.buildNode("mv.bypass.gamemode.$worldName").build()
+inline val worldName get() = "$WORLD_PREFIX$currentSeason"
+inline val worldBypassPerm: Node get() = Node.builder("mv.bypass.gamemode.$worldName").build()
