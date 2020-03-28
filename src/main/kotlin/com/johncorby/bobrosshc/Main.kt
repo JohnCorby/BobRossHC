@@ -10,7 +10,7 @@ class Main : JavaPlugin() {
         PLUGIN = this
 
         PERM_API = LuckPermsProvider.get()
-        PERM_GROUP = PERM_API.groupManager.getGroup("Trusted")!!
+        PERM_GROUP = PERM_API.groupManager.getGroup("Trusted") ?: error("no luckperms group named Trusted")
 
         loadData()
         startTimeChecker()
