@@ -1,35 +1,45 @@
-/**
- * handles creation of new seasons and checking elapsed time
- */
 package com.johncorby.bobrosshc
 
+import com.johncorby.coreapi.schedule
 import org.bukkit.WorldCreator
-import org.bukkit.scheduler.BukkitRunnable
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
+import java.time.Duration
+import java.time.Instant
+
 
 /**
- * start time checker
- * every minute, we check if it's been 14 days since last reset and create a new season if so
+ * tracks the time between seasons.
+ * every minute, we check if it's been 14 days since the last reset.
+ * if it has, create a new season.
  */
-fun startTimeChecker() = object : BukkitRunnable() {
-    override fun run() {
-        if (ChronoUnit.DAYS.between(lastReset, LocalDateTime.now()) >= 14)
-            newSeason()
-    }
-}.runTaskTimer(PLUGIN, 0, 60 * 20)
+object SeasonTracker {
+    private const val INTERVAL = 60
 
+    init {
+        schedule(period = INTERVAL * 20L) {
+            val time = Duration.between(
+                Instant.parse(Data.lastReset),
+                Instant.now()
+            )
+            if (time.toDays() >= 14) newSeason()
+        }
+    }
+
+}
+
+/**
+ * start a new season
+ */
 fun newSeason() {
     // reset world
     WorldCreator(worldName).createWorld()
-    deadPlayers.clear()
+    Data.deadPlayers.clear()
 
     // update bypass permissions
     PERM_GROUP.data().remove(worldBypassPerm)
-    currentSeason++
+    Data.currentSeason++
     PERM_GROUP.data().add(worldBypassPerm)
     PERM_API.groupManager.saveGroup(PERM_GROUP)
 
     // the last reset was right now
-    lastReset = LocalDateTime.now()
+    Data.lastReset = Instant.now().toString()
 }
