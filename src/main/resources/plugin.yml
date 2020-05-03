@@ -1,5 +1,6 @@
 main: com.johncorby.bobrosshc.Main
 name: BobRossHC
-version: 1.0-SNAPSHOT
-depend: [LuckPerms]
+version: 2.0-SNAPSHOT
 api-version: 1.15
+
+depend: [LuckPerms]

@@ -1,3 +1,10 @@
+repositories {
+    maven { url 'https://repo.aikar.co/content/groups/aikar/' }
+    maven { url 'https://jitpack.io' }
+}
+
 dependencies {
+    implementation project(':CoreApi')
+
     compileOnly 'net.luckperms:api:+'
 }
