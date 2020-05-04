@@ -11,6 +11,7 @@ class Main : Plugin() {
         Data
         SeasonHandler
         Listener
+        Command
 
         info("enabled")
     }

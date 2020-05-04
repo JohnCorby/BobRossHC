@@ -19,6 +19,12 @@ object SeasonHandler {
     private inline val worldName get() = "${Config.worldPrefix}${Data.currentSeason}"
 
     init {
+        // load existing season worlds
+        val seasonWorlds = server.worldContainer.list()!!.filter { it.startsWith(Config.worldPrefix) }
+        seasonWorlds.forEach {
+            WorldCreator(it).createWorld()
+        }
+
         if (Data.lastReset == Data.NOT_STARTED) makeNew()
 
         schedule(period = Config.seasonCheckInterval * 20L) {
@@ -36,26 +42,33 @@ object SeasonHandler {
         ).toDays()
 
     /**
+     * gets the current world for this season
+     */
+    val currentWorld get() = server.getWorld(worldName)
+
+    /**
      * start a new season
      */
     fun makeNew() {
-        val oldWorld = server.getWorld(worldName)!!
+        val oldWorld = currentWorld
+        Data.deadPlayers.clear()
         Data.currentSeason++
         val newWorld = WorldCreator(worldName).createWorld()!!
 
         // tp players from old world to new one
-        oldWorld.players.forEach {
+        oldWorld?.players?.forEach {
             it.teleport(newWorld.spawnLocation)
             it.info("a new season has started!")
         }
 
         // get rid of worlds older than n seasons
+        // and also worlds that are higher than the current season
         val seasonWorlds: List<World> = server.worlds.filter { it.name.startsWith(Config.worldPrefix) }
-        for (seasonWorld in seasonWorlds) {
-            val season = seasonWorld.name.drop(Config.worldPrefix.length).toInt()
-            if (season < Data.currentSeason - Config.numSeasonsToKeep) {
-                server.unloadWorld(seasonWorld, false)
-                seasonWorld.worldFolder.deleteRecursively()
+        seasonWorlds.forEach {
+            val season = it.name.drop(Config.worldPrefix.length).toInt()
+            if (season <= Data.currentSeason - Config.numSeasonsToKeep || season > Data.currentSeason) {
+                server.unloadWorld(it, false)
+                it.worldFolder.deleteRecursively()
             }
         }
 

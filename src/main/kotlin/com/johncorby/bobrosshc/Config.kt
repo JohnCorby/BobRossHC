@@ -12,8 +12,7 @@ object Config : DelegateConfigFile("config.yml") {
 object Data : DelegateConfigFile("data.yml") {
     const val NOT_STARTED = "not started"
 
-    var currentSeason by Key("current-season", 1)
+    var currentSeason by Key("current-season", 0)
     var lastReset by Key("last-reset", NOT_STARTED)
     val deadPlayers by Key("dead-players", mutableListOf<String>())
-
 }

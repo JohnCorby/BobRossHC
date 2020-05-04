@@ -31,9 +31,9 @@ object Listener : Listener {
             player.apply {
                 if (!valid) return@listen
 
-                val desiredGameMode = if (uuid in Data.deadPlayers) GameMode.SPECTATOR else GameMode.SURVIVAL
-                val wantedGameMode = newGameMode
-                if (desiredGameMode != wantedGameMode) isCancelled = true
+                val expectedGameMode = if (uuid in Data.deadPlayers) GameMode.SPECTATOR else GameMode.SURVIVAL
+                if (expectedGameMode != newGameMode) isCancelled = true
+                // todo set gamemode somehow or make sure that it actually is set since multiverse dumb
             }
         }
     }
