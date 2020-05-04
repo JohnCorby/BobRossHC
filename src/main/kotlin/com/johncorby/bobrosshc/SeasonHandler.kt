@@ -1,5 +1,9 @@
 package com.johncorby.bobrosshc
 
+import com.johncorby.bobrosshc.PermHandler.API
+import com.johncorby.bobrosshc.PermHandler.GROUP
+import com.johncorby.bobrosshc.PermHandler.worldBypassPerm
+import com.johncorby.bobrosshc.PermHandler.worldName
 import com.johncorby.coreapi.schedule
 import org.bukkit.WorldCreator
 import java.time.Duration
@@ -7,11 +11,12 @@ import java.time.Instant
 
 
 /**
- * tracks the time between seasons.
+ * handles tracking and creating new seasons.
+ *
  * every minute, we check if it's been 14 days since the last reset.
  * if it has, create a new season.
  */
-object SeasonTracker {
+object SeasonHandler {
     private const val INTERVAL = 60
 
     init {
@@ -20,26 +25,25 @@ object SeasonTracker {
                 Instant.parse(Data.lastReset),
                 Instant.now()
             )
-            if (time.toDays() >= 14) newSeason()
+            if (time.toDays() >= 14) makeNew()
         }
     }
 
-}
+    /**
+     * start a new season
+     */
+    fun makeNew() {
+        // reset world
+        WorldCreator(worldName).createWorld()
+        Data.deadPlayers.clear()
 
-/**
- * start a new season
- */
-fun newSeason() {
-    // reset world
-    WorldCreator(worldName).createWorld()
-    Data.deadPlayers.clear()
+        // update bypass permissions
+        GROUP.data().remove(worldBypassPerm)
+        Data.currentSeason++
+        GROUP.data().add(worldBypassPerm)
+        API.groupManager.saveGroup(GROUP)
 
-    // update bypass permissions
-    PERM_GROUP.data().remove(worldBypassPerm)
-    Data.currentSeason++
-    PERM_GROUP.data().add(worldBypassPerm)
-    PERM_API.groupManager.saveGroup(PERM_GROUP)
-
-    // the last reset was right now
-    Data.lastReset = Instant.now().toString()
+        // the last reset was right now
+        Data.lastReset = Instant.now().toString()
+    }
 }

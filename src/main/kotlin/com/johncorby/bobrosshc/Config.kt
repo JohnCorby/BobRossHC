@@ -10,7 +10,7 @@ object Data : DelegateConfigFile("data.yml") {
     var deadPlayers by Key("dead-players", mutableListOf<String>())
 
     init {
-        // if last-reset isn't set, then we haven't had any seasons and should make a new one
-        if (lastReset == NULL_TIME) newSeason()
+        // if there is no last reset, then we haven't had any seasons and should make a new one
+        if (lastReset == NULL_TIME) SeasonHandler.makeNew()
     }
 }

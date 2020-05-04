@@ -7,22 +7,31 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
-
-private inline val Player.valid get() = world.name.startsWith(WORLD_PREFIX)
-private inline val Player.uuid get() = uniqueId.toString()
+import org.bukkit.event.player.PlayerJoinEvent
 
 const val WORLD_PREFIX = "HardCore_Season_"
 
 object Listener : Listener {
+    private inline val Player.valid get() = world.name.startsWith(WORLD_PREFIX)
+    private inline val Player.uuid get() = uniqueId.toString()
+
     init {
         listen<PlayerDeathEvent> {
             entity.apply {
                 if (!valid) return@listen
 
-                Data.deadPlayers.add(uniqueId.toString())
-                gameMode = GameMode.SPECTATOR
+                Data.deadPlayers.add(uuid)
+                updateGameMode()
 
                 info("rip you got fucked. better luck next season.")
+            }
+        }
+
+        listen<PlayerJoinEvent> {
+            player.apply {
+                if (!valid) return@listen
+
+                updateGameMode()
             }
         }
 
@@ -30,8 +39,12 @@ object Listener : Listener {
             player.apply {
                 if (!valid) return@listen
 
-                gameMode = if (uuid in Data.deadPlayers) GameMode.SPECTATOR else GameMode.SURVIVAL
+                updateGameMode()
             }
         }
+    }
+
+    private fun Player.updateGameMode() {
+        gameMode = if (uuid in Data.deadPlayers) GameMode.SPECTATOR else GameMode.SURVIVAL
     }
 }
