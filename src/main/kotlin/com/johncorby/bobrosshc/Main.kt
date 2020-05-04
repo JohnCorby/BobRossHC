@@ -7,7 +7,7 @@ class Main : Plugin() {
     override fun onEnable() {
         super.onEnable()
 
-        PermHandler
+        Config
         Data
         SeasonHandler
         Listener

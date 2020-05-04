@@ -2,15 +2,18 @@ package com.johncorby.bobrosshc
 
 import com.johncorby.coreapi.DelegateConfigFile
 
+object Config : DelegateConfigFile("config.yml") {
+    val worldPrefix by Key("world-prefix", "HardCore_Season_")
+    val seasonDuration by Key("season-duration", 14)
+    val numSeasonsToKeep by Key("num-seasons-to-keep", 5)
+    val seasonCheckInterval by Key("new-season-check-interval", 60)
+}
+
 object Data : DelegateConfigFile("data.yml") {
-    private const val NULL_TIME = "null"
+    const val NOT_STARTED = "not started"
 
-    var currentSeason by Key("current-season", 0)
-    var lastReset by Key("last-reset", NULL_TIME)
-    var deadPlayers by Key("dead-players", mutableListOf<String>())
+    var currentSeason by Key("current-season", 1)
+    var lastReset by Key("last-reset", NOT_STARTED)
+    val deadPlayers by Key("dead-players", mutableListOf<String>())
 
-    init {
-        // if there is no last reset, then we haven't had any seasons and should make a new one
-        if (lastReset == NULL_TIME) SeasonHandler.makeNew()
-    }
 }

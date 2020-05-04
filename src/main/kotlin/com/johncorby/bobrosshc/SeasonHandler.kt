@@ -1,10 +1,9 @@
 package com.johncorby.bobrosshc
 
-import com.johncorby.bobrosshc.PermHandler.API
-import com.johncorby.bobrosshc.PermHandler.GROUP
-import com.johncorby.bobrosshc.PermHandler.worldBypassPerm
-import com.johncorby.bobrosshc.PermHandler.worldName
+import com.johncorby.coreapi.info
 import com.johncorby.coreapi.schedule
+import hazae41.minecraft.kutils.bukkit.server
+import org.bukkit.World
 import org.bukkit.WorldCreator
 import java.time.Duration
 import java.time.Instant
@@ -17,33 +16,50 @@ import java.time.Instant
  * if it has, create a new season.
  */
 object SeasonHandler {
-    private const val INTERVAL = 60
+    private inline val worldName get() = "${Config.worldPrefix}${Data.currentSeason}"
 
     init {
-        schedule(period = INTERVAL * 20L) {
-            val time = Duration.between(
-                Instant.parse(Data.lastReset),
-                Instant.now()
-            )
-            if (time.toDays() >= 14) makeNew()
+        if (Data.lastReset == Data.NOT_STARTED) makeNew()
+
+        schedule(period = Config.seasonCheckInterval * 20L) {
+            if (daysUntilNext <= 0) makeNew()
         }
     }
+
+    /**
+     * gets the number of days until the next season will begin
+     */
+    val daysUntilNext
+        get() = Config.seasonDuration - Duration.between(
+            Instant.parse(Data.lastReset),
+            Instant.now()
+        ).toDays()
 
     /**
      * start a new season
      */
     fun makeNew() {
-        // reset world
-        WorldCreator(worldName).createWorld()
-        Data.deadPlayers.clear()
-
-        // update bypass permissions
-        GROUP.data().remove(worldBypassPerm)
+        val oldWorld = server.getWorld(worldName)!!
         Data.currentSeason++
-        GROUP.data().add(worldBypassPerm)
-        API.groupManager.saveGroup(GROUP)
+        val newWorld = WorldCreator(worldName).createWorld()!!
 
-        // the last reset was right now
+        // tp players from old world to new one
+        oldWorld.players.forEach {
+            it.teleport(newWorld.spawnLocation)
+            it.info("a new season has started!")
+        }
+
+        // get rid of worlds older than n seasons
+        val seasonWorlds: List<World> = server.worlds.filter { it.name.startsWith(Config.worldPrefix) }
+        for (seasonWorld in seasonWorlds) {
+            val season = seasonWorld.name.drop(Config.worldPrefix.length).toInt()
+            if (season < Data.currentSeason - Config.numSeasonsToKeep) {
+                server.unloadWorld(seasonWorld, false)
+                seasonWorld.worldFolder.deleteRecursively()
+            }
+        }
+
+        // update last reset time
         Data.lastReset = Instant.now().toString()
     }
 }

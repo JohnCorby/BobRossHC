@@ -6,13 +6,13 @@ import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
-import org.bukkit.event.player.PlayerChangedWorldEvent
-import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerGameModeChangeEvent
 
-const val WORLD_PREFIX = "HardCore_Season_"
-
+/**
+ * tracks death and handles changing gamemode
+ */
 object Listener : Listener {
-    private inline val Player.valid get() = world.name.startsWith(WORLD_PREFIX)
+    private inline val Player.valid get() = world.name.startsWith(Config.worldPrefix)
     private inline val Player.uuid get() = uniqueId.toString()
 
     init {
@@ -21,30 +21,20 @@ object Listener : Listener {
                 if (!valid) return@listen
 
                 Data.deadPlayers.add(uuid)
-                updateGameMode()
+                gameMode = GameMode.SPECTATOR
 
                 info("rip you got fucked. better luck next season.")
             }
         }
 
-        listen<PlayerJoinEvent> {
+        listen<PlayerGameModeChangeEvent> {
             player.apply {
                 if (!valid) return@listen
 
-                updateGameMode()
+                val desiredGameMode = if (uuid in Data.deadPlayers) GameMode.SPECTATOR else GameMode.SURVIVAL
+                val wantedGameMode = newGameMode
+                if (desiredGameMode != wantedGameMode) isCancelled = true
             }
         }
-
-        listen<PlayerChangedWorldEvent> {
-            player.apply {
-                if (!valid) return@listen
-
-                updateGameMode()
-            }
-        }
-    }
-
-    private fun Player.updateGameMode() {
-        gameMode = if (uuid in Data.deadPlayers) GameMode.SPECTATOR else GameMode.SURVIVAL
     }
 }
