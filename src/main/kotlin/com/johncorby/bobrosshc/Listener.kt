@@ -41,5 +41,6 @@ object Listener : Listener {
     private fun Player.updateGameMode() {
         if (!valid) return
         gameMode = expectedGameMode
+        // todo sometimes we can fly for some reason???? setFly doesnt fix it
     }
 }
