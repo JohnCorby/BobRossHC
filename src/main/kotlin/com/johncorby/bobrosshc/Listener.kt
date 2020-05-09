@@ -23,14 +23,24 @@ object Listener : Listener {
             if (!entity.valid) return@listen
 
             Data.deadPlayers.add(entity.uuid)
-            entity.updateGameMode()
+            entity.gameMode = GameMode.SPECTATOR
 
             entity.info("rip you got fucked. better luck next season.")
             isCancelled = true
         }
 
-        listen<PlayerChangedWorldEvent> { player.updateGameMode() }
-        listen<PlayerJoinEvent> { player.updateGameMode() }
+        listen<PlayerChangedWorldEvent> {
+            if (!player.valid) return@listen
+            player.gameMode = player.expectedGameMode
+            schedule {
+                player.allowFlight = player.expectedFlight
+                player.inventory.clear()
+            }
+        }
+        listen<PlayerJoinEvent> {
+            if (!player.valid) return@listen
+            player.gameMode = player.expectedGameMode
+        }
 
         // prevent multiverse or anything else from changing our gamemode
         listen<PlayerGameModeChangeEvent> {
@@ -38,13 +48,6 @@ object Listener : Listener {
         }
     }
 
-    private val Player.expectedGameMode get() = if (uuid in Data.deadPlayers) GameMode.SPECTATOR else GameMode.SURVIVAL
-    private fun Player.updateGameMode() {
-        if (!valid) return
-        gameMode = expectedGameMode
-        if (gameMode == GameMode.SURVIVAL) {
-            // for some reason, it doesnt like making us not fly, so we wait a sec before changing it
-            schedule { allowFlight = false }
-        }
-    }
+    private inline val Player.expectedGameMode get() = if (uuid in Data.deadPlayers) GameMode.SPECTATOR else GameMode.SURVIVAL
+    private inline val Player.expectedFlight get() = expectedGameMode == GameMode.SPECTATOR
 }
