@@ -68,6 +68,7 @@ object SeasonHandler {
             val season = seasonWorld.name.drop(Config.WORLD_PREFIX.length).toInt()
             if (season <= Data.currentSeason - Config.NUM_SEASONS_TO_KEEP || season > Data.currentSeason) {
                 seasonWorld.players.forEach { Command.teleport(it) }
+
                 server.unloadWorld(seasonWorld, false)
                 seasonWorld.worldFolder.deleteRecursively()
             }

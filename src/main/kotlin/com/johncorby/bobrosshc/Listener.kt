@@ -2,6 +2,7 @@ package com.johncorby.bobrosshc
 
 import com.johncorby.coreapi.info
 import com.johncorby.coreapi.listen
+import com.johncorby.coreapi.schedule
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
@@ -22,7 +23,7 @@ object Listener : Listener {
             if (!entity.valid) return@listen
 
             Data.deadPlayers.add(entity.uuid)
-            entity.gameMode = GameMode.SPECTATOR
+            entity.updateGameMode()
 
             entity.info("rip you got fucked. better luck next season.")
             isCancelled = true
@@ -41,6 +42,9 @@ object Listener : Listener {
     private fun Player.updateGameMode() {
         if (!valid) return
         gameMode = expectedGameMode
-        // todo sometimes we can fly for some reason???? setFly doesnt fix it
+        if (gameMode == GameMode.SURVIVAL) {
+            // for some reason, it doesnt like making us not fly, so we wait a sec before changing it
+            schedule { allowFlight = false }
+        }
     }
 }
