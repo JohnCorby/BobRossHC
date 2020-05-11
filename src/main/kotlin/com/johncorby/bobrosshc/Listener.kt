@@ -8,7 +8,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
-import org.bukkit.event.player.PlayerGameModeChangeEvent
 import org.bukkit.event.player.PlayerJoinEvent
 
 /**
@@ -31,23 +30,20 @@ object Listener : Listener {
 
         listen<PlayerChangedWorldEvent> {
             if (!player.valid) return@listen
-            player.gameMode = player.expectedGameMode
+            // schedule to bypass inventory manager
             schedule {
-                player.allowFlight = player.expectedFlight
+                player.gameMode = player.expectedGameMode
                 player.inventory.clear()
             }
         }
         listen<PlayerJoinEvent> {
             if (!player.valid) return@listen
-            player.gameMode = player.expectedGameMode
-        }
-
-        // prevent multiverse or anything else from changing our gamemode
-        listen<PlayerGameModeChangeEvent> {
-            if (player.valid && newGameMode != player.expectedGameMode) isCancelled = true
+            // schedule to bypass inventory manager
+            schedule {
+                player.gameMode = player.expectedGameMode
+            }
         }
     }
 
     private inline val Player.expectedGameMode get() = if (uuid in Data.deadPlayers) GameMode.SPECTATOR else GameMode.SURVIVAL
-    private inline val Player.expectedFlight get() = expectedGameMode == GameMode.SPECTATOR
 }
