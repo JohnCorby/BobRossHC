@@ -25,7 +25,7 @@ object SeasonHandler {
             WorldCreator(it).createWorld()
         }
 
-        if (Data.lastReset == Data.NOT_STARTED) makeNew()
+        if (Data.lastReset == null) makeNew()
 
         schedule(period = Config.SEASON_CHECK_INTERVAL * 20L) {
             if (daysUntilNext <= 0) makeNew()
@@ -37,7 +37,7 @@ object SeasonHandler {
      */
     val daysUntilNext
         get() = Config.SEASON_DURATION - Duration.between(
-            Instant.parse(Data.lastReset),
+            Instant.parse(Data.lastReset!!),
             Instant.now()
         ).toDays()
 
@@ -49,7 +49,7 @@ object SeasonHandler {
     /**
      * start a new season
      */
-    fun makeNew() {
+    fun makeNew() = Data.use(true) {
         val oldWorld = currentWorld
         Data.deadPlayers.clear()
         Data.currentSeason++
