@@ -10,6 +10,7 @@ import com.johncorby.coreapi.info
 import com.johncorby.coreapi.unitize
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause.COMMAND
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 
@@ -40,7 +41,7 @@ object Command : BaseCommand() {
     @Description("teleport to the season world")
     fun teleport(sender: Player) {
         sender.info("teleporting to season world")
-        sender.teleport(SeasonHandler.currentWorld!!.spawnLocation)
+        sender.teleport(SeasonHandler.currentWorld!!.spawnLocation, COMMAND)
     }
 
     @Subcommand("season")
