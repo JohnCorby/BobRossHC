@@ -12,5 +12,5 @@ object Config : ConfigFile() {
 object Data : ConfigFile("data.yml") {
     var currentSeason by Field("current-season", 0)
     var lastReset by Field<String?>("last-reset")
-    val deadPlayers by Field("dead-players", mutableListOf<String>())
+    var deadPlayers by Field("dead-players", mutableListOf<String>())
 }

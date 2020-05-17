@@ -21,7 +21,10 @@ object Listener : Listener {
         listen<PlayerDeathEvent> {
             if (!entity.valid) return@listen
 
-            Data.use(true) { Data.deadPlayers.add(entity.uuid) }
+            Data.use {
+                Data.deadPlayers.add(entity.uuid)
+                Data.deadPlayers = Data.deadPlayers
+            }
             entity.gameMode = GameMode.SPECTATOR
 
             entity.info("rip you got fucked. better luck next season.")

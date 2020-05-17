@@ -49,9 +49,10 @@ object SeasonHandler {
     /**
      * start a new season
      */
-    fun makeNew() = Data.use(true) {
+    fun makeNew() = Data.use {
         val oldWorld = currentWorld
         Data.deadPlayers.clear()
+        Data.deadPlayers = Data.deadPlayers
         Data.currentSeason++
         WorldCreator(worldName).createWorld()!!
 
