@@ -3,6 +3,7 @@ package com.johncorby.bobrosshc
 import com.johncorby.coreapi.Plugin
 import com.johncorby.coreapi.info
 
+@Suppress("unused")
 class Main : Plugin() {
     override fun onEnable() {
         super.onEnable()

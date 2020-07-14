@@ -25,7 +25,7 @@ object Command : BaseCommand() {
             enableUnstableAPI("help")
 
             definePermissions(
-                Permission(PERM_ADMIN),
+                Permission(PERM_ADMIN, PermissionDefault.OP),
                 Permission(PERM_DEFAULT, PermissionDefault.TRUE)
             )
 
@@ -39,9 +39,9 @@ object Command : BaseCommand() {
 
     @Default
     @Description("teleport to the season world")
-    fun teleport(sender: Player) {
-        sender.info("teleporting to season world")
-        sender.teleport(SeasonHandler.currentWorld!!.spawnLocation, COMMAND)
+    fun Player.tp() {
+        info("teleporting to season world")
+        teleport(SeasonHandler.currentWorld!!.spawnLocation, COMMAND)
     }
 
     @Subcommand("season")
